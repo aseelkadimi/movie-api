@@ -16,6 +16,11 @@ pipeline {
                 echo 'Mutation test ....'
             }
         }
+        stage('Sonar') {
+            steps {
+                sh 'mvn sonar:sonar -Dsonar.host.url=http://localhost:9000'
+            }
+        }
         stage('Docker image') {
             steps {
                 echo 'Creating docker image..'
