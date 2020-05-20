@@ -6,6 +6,11 @@ pipeline {
         }
     }
     stages {
+        stage('Curl sonar') {
+            steps {
+                sh 'curl http://localhost:9000'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'mvn clean package'

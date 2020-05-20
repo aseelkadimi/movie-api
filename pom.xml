@@ -74,8 +74,22 @@
 			<artifactId>easy-random-core</artifactId>
 			<version>4.2.0</version>
 		</dependency>
-
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- EXAMPLE FOR MYSQL -->
+				<sonar.jdbc.username>admin</sonar.jdbc.username>
+				<sonar.jdbc.password>admin</sonar.jdbc.password>
+				<sonar.host.url>http://localhost:9000</sonar.host.url>
+			</properties>
+		</profile>
+	</profiles>
 
 	<build>
 		<plugins>
