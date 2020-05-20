@@ -1,18 +1,21 @@
 pipeline {
     agent any
-
+    tools {
+            maven 'Maven 3.3.9'
+            jdk 'jdk8'
+        }
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                sh 'mvn clean package'
             }
         }
-        stage('Test') {
+        stage('Docker image') {
             steps {
-                echo 'Testing..'
+                echo 'Creating docker image..'
             }
         }
-        stage('Deploy') {
+        stage('Deploy Docker image') {
             steps {
                 echo 'Deploying....'
             }
