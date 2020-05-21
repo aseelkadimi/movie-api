@@ -2,9 +2,11 @@ package com.kada.learn.api.security.web;
 
 import com.kada.learn.api.security.exception.AlreadyExistException;
 import com.kada.learn.api.security.model.Movie;
+import com.kada.learn.api.security.model.MovieDto;
 import com.kada.learn.api.security.service.MovieService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +49,10 @@ public class MovieController {
     }
 
     @PostMapping("/movie")
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> createMovie(@RequestBody MovieDto movieDto) {
+
+        ModelMapper modelMapper = new ModelMapper();
+        Movie movie = modelMapper.map(movieDto, Movie.class);
 
         // make sure the movie does not exist already
         if(service.findByName(movie.getName()).orElse(null) != null){
@@ -71,9 +76,12 @@ public class MovieController {
 
     @PutMapping("/movie/{id}")
     public ResponseEntity<Movie> updateMovie(
-            @RequestBody Movie movie,
+            @RequestBody MovieDto movieDto,
             @PathVariable Integer id,
             @RequestHeader("If-Match") Integer ifMatch) {
+
+        ModelMapper modelMapper = new ModelMapper();
+        Movie movie = modelMapper.map(movieDto, Movie.class);
 
         logger.info("Updating movie with id: {}, {}", movie.getId(), movie);
 
