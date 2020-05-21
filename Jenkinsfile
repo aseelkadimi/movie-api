@@ -6,11 +6,6 @@ pipeline {
         }
     }
     stages {
-        stage('Curl sonar') {
-            steps {
-                sh 'curl http://localhost:9000'
-            }
-        }
         stage('Build') {
             steps {
                 sh 'mvn clean package'
@@ -23,7 +18,7 @@ pipeline {
         }
         stage('Sonar') {
             steps {
-                sh 'mvn sonar:sonar -Dsonar.host.url=http://localhost:9000'
+                sh 'mvn sonar:sonar -Dsonar.host.url=http://172.18.0.3:9000'
             }
         }
         stage('Docker image') {

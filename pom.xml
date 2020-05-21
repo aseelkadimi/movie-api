@@ -19,7 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 
-		<sonar.host.url>http://localhost:9000</sonar.host.url>
+		<sonar.host.url>http://172.18.0.3:9000</sonar.host.url>
 	</properties>
 
 	<dependencies>
@@ -76,21 +76,6 @@
 		</dependency>
 	</dependencies>
 
-	<profiles>
-		<profile>
-			<id>sonar</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<properties>
-				<!-- EXAMPLE FOR MYSQL -->
-				<sonar.jdbc.username>admin</sonar.jdbc.username>
-				<sonar.jdbc.password>admin</sonar.jdbc.password>
-				<sonar.host.url>http://localhost:9000</sonar.host.url>
-			</properties>
-		</profile>
-	</profiles>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -100,7 +85,7 @@
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
-				<version>3.6.0.1398</version>
+				<version>3.7.0.1746</version>
 			</plugin>
 		</plugins>
 	</build>
