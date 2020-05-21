@@ -13,9 +13,14 @@ pipeline {
         stage('Sonar') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-              sh 'mvn sonar:sonar'
+                  sh 'mvn sonar:sonar'
+                }
             }
         }
+        stage("Docker build") {
+             steps {
+                  sh "docker build -t aseelkadimi/movie-api ."
+             }
         }
         stage('Deploy Docker image') {
             steps {
