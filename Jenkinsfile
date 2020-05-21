@@ -22,6 +22,15 @@ pipeline {
                   sh "docker build -t aseelkadimi/movie-api ."
              }
         }
+        stage("Docker push") {
+             steps {
+                withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'dockerPass', usernameVariable: 'dockerUser')]) {
+                    sh "docker login -u $dockerUser -p $dockerPass"
+                    sh "docker push $dockerUser/movie-api"
+                }
+
+             }
+        }
         stage('Deploy Docker image') {
             steps {
                 echo 'Deploying....'
