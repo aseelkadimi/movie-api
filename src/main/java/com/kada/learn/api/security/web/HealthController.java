@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
 
     @GetMapping
-    public ResponseEntity<?> getMovie() {
+    public ResponseEntity<String> getHealth() {
         return ResponseEntity.ok().body("Greeting from health controller");
     }
 }
