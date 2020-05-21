@@ -33,7 +33,7 @@ pipeline {
         }
         stage('Deploy Docker image') {
             steps {
-                echo 'Deploying....'
+                echo 'docker run -p 8081:8080 aseelkadimi/movie-api'
             }
         }
     }
