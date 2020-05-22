@@ -10,7 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 public class AssertionUtils {
-    public static boolean assertHeaders(Movie movie, ResponseEntity<?> response) {
+    public static boolean assertHeaders(Movie movie, ResponseEntity<Movie> response) {
 
         boolean etagCheck = true;
         String etagValue = response.getHeaders().getETag();

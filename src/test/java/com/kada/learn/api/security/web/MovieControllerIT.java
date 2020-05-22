@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Optional;
 import java.util.TimeZone;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -60,7 +59,7 @@ class MovieControllerIT {
     void testGetMovieByIdFound() throws Exception {
         // Given
         Movie movie = easyRandom.nextObject(Movie.class);
-        doReturn(Optional.of(movie)).when(service).findById(movie.getId());
+        doReturn(movie).when(service).findById(movie.getId());
 
         // When
         MockHttpServletResponse response = mockMvc
@@ -78,7 +77,7 @@ class MovieControllerIT {
     void testGetMovieByIdNotFound() throws Exception {
         // Given
         Movie movie = easyRandom.nextObject(Movie.class);
-        doReturn(Optional.empty()).when(service).findById(movie.getId());
+        doReturn(null).when(service).findById(movie.getId());
 
         // When
         MockHttpServletResponse response = mockMvc
@@ -135,7 +134,7 @@ class MovieControllerIT {
 
         Movie getMovie = new Movie(1, 1, "Matrix", "Us", "2020", "30k", "Good movie");
 
-        doReturn(Optional.of(getMovie)).when(service).findById(anyInt());
+        doReturn(getMovie).when(service).findById(anyInt());
         doReturn(true).when(service).update(any());
 
         // When
@@ -159,7 +158,7 @@ class MovieControllerIT {
         putMovie.setName("Matrix");
         putMovie.setYearOfRelease("2002");
 
-        doReturn(Optional.empty()).when(service).findById(1);
+        doReturn(null).when(service).findById(1);
 
         // When
         MockHttpServletResponse response =  mockMvc.perform(put("/movie/{id}", 1)
@@ -182,7 +181,7 @@ class MovieControllerIT {
 
         Movie getMovie = new Movie(1,1, "Matrix", "Us", "2020", "30k", "Good movie");
 
-        doReturn(Optional.of(getMovie)).when(service).findById(getMovie.getId());
+        doReturn(getMovie).when(service).findById(getMovie.getId());
         doReturn(false).when(service).update(any());
 
         // When
@@ -202,7 +201,7 @@ class MovieControllerIT {
         // Given
         Movie getMovie = new Movie(1, "Matrix", "Us", "2020", "30k", "Good movie");
 
-        doReturn(Optional.of(getMovie)).when(service).findById(1);
+        doReturn(getMovie).when(service).findById(1);
         doReturn(true).when(service).delete(1);
 
         // When
@@ -221,7 +220,7 @@ class MovieControllerIT {
     void testDeleteMovieNotFound() throws Exception {
         // Given
 
-        doReturn(Optional.empty()).when(service).findById(1);
+        doReturn(null).when(service).findById(1);
 
         // When
         MockHttpServletResponse response =  mockMvc
@@ -240,7 +239,7 @@ class MovieControllerIT {
         // Given
         Movie getMovie = new Movie(1, "Matrix", "Us", "2020", "30k", "Good movie");
 
-        doReturn(Optional.of(getMovie)).when(service).findById(1);
+        doReturn(getMovie).when(service).findById(1);
         doReturn(false).when(service).delete(1);
 
         // When

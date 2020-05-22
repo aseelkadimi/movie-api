@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 @RestController
 public class MovieController {
@@ -27,20 +26,31 @@ public class MovieController {
     }
 
     @GetMapping("/movie/{id}")
-    public ResponseEntity<?> getMovie(@PathVariable Integer id) {
-        return service.findById(id)
-                .map(movie -> {
-                    try {
-                        return ResponseEntity
-                                .ok()
-                                .eTag(Integer.toString(movie.getVersion()))
-                                .location(new URI("/movie/" + movie.getId()))
-                                .body(movie);
-                    } catch (URISyntaxException e ) {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-                    }
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Movie> getMovie(@PathVariable Integer id) {
+        Movie movie = service.findById(id);
+
+        return buildResponseEntity(movie);
+    }
+
+    private ResponseEntity<Movie> buildResponseEntity(Movie movie) {
+        if(movie == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity
+                .ok()
+                .eTag(Integer.toString(movie.getVersion()))
+                .location(getURI(movie.getId()))
+                .body(movie);
+    }
+
+    private URI getURI(Integer id) {
+        URI uri = null;
+        try {
+            uri = new URI("/movie/" + id);
+        } catch (URISyntaxException e) {
+            logger.error("An error occurred during URI creation, cause {}", e.getMessage());
+        }
+        return uri;
     }
 
     @GetMapping("/movies")
@@ -55,7 +65,7 @@ public class MovieController {
         Movie movie = modelMapper.map(movieDto, Movie.class);
 
         // make sure the movie does not exist already
-        if(service.findByName(movie.getName()).orElse(null) != null){
+        if(service.findByName(movie.getName()) != null){
             throw new AlreadyExistException("The movie you are trying to create already exists");
         }
 
@@ -86,62 +96,69 @@ public class MovieController {
         logger.info("Updating movie with id: {}, {}", movie.getId(), movie);
 
         // Get the existing movie
-        Optional<Movie> existingMovie = service.findById(id);
+        Movie existingMovie = service.findById(id);
+        if(existingMovie == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
-        Optional<ResponseEntity<Movie>> responseEntity = existingMovie.map(m -> {
-            logger.info("Movie with ID: " + id + " has a version of " + m.getVersion());
-            logger.info("Update is for IF-Match " + ifMatch);
-            if (!m.getVersion().equals(ifMatch)) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            }
+        logger.info("Update is for IF-Match " + ifMatch);
+        if (!existingMovie.getVersion().equals(ifMatch)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
 
-            // Update the movie
-            if (movie.getCountryOrigin() != null) {
-                m.setCountryOrigin(movie.getCountryOrigin());
-            }
-            if (movie.getYearOfRelease() != null) {
-                m.setYearOfRelease(movie.getYearOfRelease());
-            }
-            if (movie.getBudget() != null) {
-                m.setBudget(movie.getBudget());
-            }
-            if (movie.getPlot() != null) {
-                m.setPlot(movie.getPlot());
-            }
-            try {
-                // Perform update and return OK
-                if (service.update(m)) {
-                    return ResponseEntity
-                            .ok()
-                            .location(new URI("/movie/" + m.getId()))
-                            .eTag(Integer.toString(m.getVersion()))
-                            .body(m);
-                } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-                }
-            } catch (URISyntaxException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        });
+        prepareObject(existingMovie, movie);
 
-        return responseEntity.orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+        ResponseEntity<Movie> responseEntity;
+        // Perform update and return OK
+        if (service.update(existingMovie)) {
+            responseEntity = ResponseEntity
+                    .ok()
+                    .location(getURI(id))
+                    .eTag(Integer.toString(existingMovie.getVersion()))
+                    .body(existingMovie);
+        } else {
+            responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        return responseEntity;
+    }
+
+    private void prepareObject(Movie m, Movie movie) {
+        logger.info("Movie with ID: " + m + " has a version of " + m.getVersion());
+
+        // Update the movie
+        if (movie.getCountryOrigin() != null) {
+            m.setCountryOrigin(movie.getCountryOrigin());
+        }
+        if (movie.getYearOfRelease() != null) {
+            m.setYearOfRelease(movie.getYearOfRelease());
+        }
+        if (movie.getBudget() != null) {
+            m.setBudget(movie.getBudget());
+        }
+        if (movie.getPlot() != null) {
+            m.setPlot(movie.getPlot());
+        }
     }
 
     @DeleteMapping("/movie/{id}")
-    public ResponseEntity<?> deleteMovie(@PathVariable Integer id) {
+    public ResponseEntity<Movie> deleteMovie(@PathVariable Integer id) {
 
         logger.info("Deleting movie with ID {}", id);
 
         // Get the existing product
-        Optional<Movie> existingMovie = service.findById(id);
+        Movie existingMovie = service.findById(id);
 
         // Delete the review if it exists in the database
-        return existingMovie.map(movie -> {
-            if(service.delete(id)){
-                return ResponseEntity.status(HttpStatus.OK).build();
-            }else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        if(existingMovie == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        if(service.delete(id)){
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
