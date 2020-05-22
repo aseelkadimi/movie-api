@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,21 +16,21 @@ import org.springframework.http.ResponseEntity;
 import java.util.Collections;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
 class MovieControllerTest {
 
     @Mock
     private MovieService service;
 
-    private MovieController underTest;
-
     @BeforeEach
-    public void setUp(){
-        underTest = new MovieController(service);
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
     }
+
+    private MovieController underTest;
 
     @Test
     public void testGetMovieWhenSuccess(){
+        underTest = new MovieController(service);
         List<Movie> expectedMovies = Collections.singletonList(new Movie());
         Mockito.when(service.findAll()).thenReturn(expectedMovies);
 
