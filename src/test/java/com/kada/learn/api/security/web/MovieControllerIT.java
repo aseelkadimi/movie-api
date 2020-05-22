@@ -1,9 +1,9 @@
 package com.kada.learn.api.security.web;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kada.learn.api.security.model.Movie;
 import com.kada.learn.api.security.service.MovieService;
+import com.kada.learn.api.security.utils.AssertionUtils;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +21,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
@@ -70,8 +69,8 @@ class MovieControllerIT {
 
         // Then
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
-        Assertions.assertTrue(assertHeaders(movie, response));
-        Assertions.assertTrue(assertBody(movie, response));
+        Assertions.assertTrue(AssertionUtils.assertHeaders(movie, response));
+        Assertions.assertTrue(AssertionUtils.assertBody(movie, response));
     }
 
     @Test
@@ -100,13 +99,13 @@ class MovieControllerIT {
         // When
         MockHttpServletResponse response =  mockMvc.perform(post("/movie")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(movie)))
+                .content(AssertionUtils.asJsonString(movie)))
                 .andReturn().getResponse();
 
         // Then
         Assertions.assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        Assertions.assertTrue(assertHeaders(movie, response));
-        Assertions.assertTrue(assertBody(movie, response));
+        Assertions.assertTrue(AssertionUtils.assertHeaders(movie, response));
+        Assertions.assertTrue(AssertionUtils.assertBody(movie, response));
     }
 
     @Test
@@ -119,7 +118,7 @@ class MovieControllerIT {
         // When
         MockHttpServletResponse response =  mockMvc.perform(post("/movie")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(movie)))
+                .content(AssertionUtils.asJsonString(movie)))
                 .andReturn().getResponse();
 
         // Then
@@ -143,13 +142,13 @@ class MovieControllerIT {
         MockHttpServletResponse response =  mockMvc.perform(put("/movie/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.IF_MATCH, 1)
-                .content(asJsonString(putMovie)))
+                .content(AssertionUtils.asJsonString(putMovie)))
                 .andReturn().getResponse();
 
         // Then
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
-        Assertions.assertTrue(assertHeaders(getMovie, response));
-        Assertions.assertTrue(assertBody(getMovie, response));
+        Assertions.assertTrue(AssertionUtils.assertHeaders(getMovie, response));
+        Assertions.assertTrue(AssertionUtils.assertBody(getMovie, response));
     }
 
     @Test
@@ -166,7 +165,7 @@ class MovieControllerIT {
         MockHttpServletResponse response =  mockMvc.perform(put("/movie/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.IF_MATCH, 1)
-                .content(asJsonString(putMovie)))
+                .content(AssertionUtils.asJsonString(putMovie)))
                 .andReturn().getResponse();
 
         // Then
@@ -190,7 +189,7 @@ class MovieControllerIT {
         MockHttpServletResponse response =  mockMvc.perform(put("/movie/{id}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.IF_MATCH, 1)
-                .content(asJsonString(putMovie)))
+                .content(AssertionUtils.asJsonString(putMovie)))
                 .andReturn().getResponse();
 
         // Then
@@ -255,34 +254,5 @@ class MovieControllerIT {
         Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
     }
 
-    private boolean assertHeaders(Movie movie, MockHttpServletResponse response) {
-        boolean etagCheck = true;
-        String etagValue = response.getHeader(HttpHeaders.ETAG);
 
-        if(etagValue != null){
-            etagCheck = movie.getVersion().toString().equals((etagValue.replace("\"", "")));
-        }
-
-        boolean utiCheck = "/movie/{movieId}"
-                .replace("\"", "")
-                .replace("{movieId}", movie.getId().toString())
-                .equals(response.getHeader(HttpHeaders.LOCATION));
-
-        return etagCheck && utiCheck;
-    }
-
-    private boolean assertBody(Movie movie, MockHttpServletResponse response) throws UnsupportedEncodingException {
-        String actualBody = response.getContentAsString();
-        String expected = asJsonString(movie);
-        return actualBody.equals(expected);
-    }
-
-
-    static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

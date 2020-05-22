@@ -1,10 +1,5 @@
 package com.kada.learn.api.security.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 public class MovieDto {
     private Integer id;
     private Integer version = 1;
