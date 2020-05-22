@@ -33,28 +33,27 @@ public class MovieController {
     }
 
     private ResponseEntity<Movie> buildResponseEntity(Movie movie) {
+        ResponseEntity<Movie> responseEntity;
+
         if(movie == null){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity
-                .ok()
-                .eTag(Integer.toString(movie.getVersion()))
-                .location(getURI(movie.getId()))
-                .body(movie);
-    }
 
-    private URI getURI(Integer id) {
-        URI uri = null;
         try {
-            uri = new URI("/movie/" + id);
+            responseEntity = ResponseEntity
+                    .ok()
+                    .eTag(Integer.toString(movie.getVersion()))
+                    .location(new URI("/movie/" + movie.getId()))
+                    .body(movie);
         } catch (URISyntaxException e) {
             logger.error("An error occurred during URI creation, cause {}", e.getMessage());
+            responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return uri;
+        return responseEntity;
     }
 
     @GetMapping("/movies")
-    public ResponseEntity<?> getMovies() {
+    public ResponseEntity<Iterable<Movie>> getMovies() {
         return ResponseEntity.ok().body(service.findAll());
     }
 
@@ -112,11 +111,16 @@ public class MovieController {
         ResponseEntity<Movie> responseEntity;
         // Perform update and return OK
         if (service.update(existingMovie)) {
-            responseEntity = ResponseEntity
-                    .ok()
-                    .location(getURI(id))
-                    .eTag(Integer.toString(existingMovie.getVersion()))
-                    .body(existingMovie);
+            try {
+                responseEntity = ResponseEntity
+                        .ok()
+                        .eTag(Integer.toString(movie.getVersion()))
+                        .location(new URI("/movie/" + movie.getId()))
+                        .body(movie);
+            } catch (URISyntaxException e) {
+                logger.error("An error occurred during URI creation, cause {}", e.getMessage());
+                responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         } else {
             responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
