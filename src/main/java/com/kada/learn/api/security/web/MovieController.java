@@ -108,16 +108,15 @@ public class MovieController {
 
         prepareObject(existingMovie, movie);
 
-
         ResponseEntity<Movie> responseEntity;
         // Perform update and return OK
         if (service.update(existingMovie)) {
             try {
                 responseEntity = ResponseEntity
                         .ok()
-                        .eTag(Integer.toString(movie.getVersion()))
-                        .location(new URI(MOVIE_URI + movie.getId()))
-                        .body(movie);
+                        .eTag(Integer.toString(existingMovie.getVersion()))
+                        .location(new URI(MOVIE_URI + existingMovie.getId()))
+                        .body(existingMovie);
             } catch (URISyntaxException e) {
                 logger.error("An error occurred during URI creation, cause {}", e.getMessage());
                 responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
