@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 public class MovieController {
 
     private static final Logger logger = LogManager.getLogger(MovieController.class);
+    private static final String MOVIE_URI = "/movie/";
 
     private final MovieService service;
 
@@ -43,7 +44,7 @@ public class MovieController {
             responseEntity = ResponseEntity
                     .ok()
                     .eTag(Integer.toString(movie.getVersion()))
-                    .location(new URI("/movie/" + movie.getId()))
+                    .location(new URI(MOVIE_URI + movie.getId()))
                     .body(movie);
         } catch (URISyntaxException e) {
             logger.error("An error occurred during URI creation, cause {}", e.getMessage());
@@ -75,7 +76,7 @@ public class MovieController {
         try {
             // Build a created response
             return ResponseEntity
-                    .created(new URI("/movie/" + newMovie.getId()))
+                    .created(new URI(MOVIE_URI + newMovie.getId()))
                     .eTag(Integer.toString(newMovie.getVersion()))
                     .body(newMovie);
         } catch (Exception e) {
@@ -115,7 +116,7 @@ public class MovieController {
                 responseEntity = ResponseEntity
                         .ok()
                         .eTag(Integer.toString(movie.getVersion()))
-                        .location(new URI("/movie/" + movie.getId()))
+                        .location(new URI(MOVIE_URI + movie.getId()))
                         .body(movie);
             } catch (URISyntaxException e) {
                 logger.error("An error occurred during URI creation, cause {}", e.getMessage());
