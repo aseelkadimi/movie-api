@@ -148,25 +148,6 @@ class MovieControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /movie/1 - Failed")
-    public void testUpdateMovieFailed(){
-        ModelMapper modelMapper = new ModelMapper();
-
-        // Given
-        MovieDto movieDto = easyRandom.nextObject(MovieDto.class);
-        Movie movie = modelMapper.map(movieDto, Movie.class);
-
-        doReturn(movie).when(service).findById(any());
-        doReturn(false).when(service).update(any());
-
-        // When
-        ResponseEntity<Movie> actual = underTest.updateMovie(movieDto, movieDto.getId(), movieDto.getVersion());
-
-        // Then
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actual.getStatusCode());
-    }
-
-    @Test
     @DisplayName("PUT /movie/1 - Success")
     public void testUpdateMovieSuccess(){
         ModelMapper modelMapper = new ModelMapper();
@@ -176,7 +157,6 @@ class MovieControllerTest {
         Movie movie = modelMapper.map(movieDto, Movie.class);
 
         doReturn(movie).when(service).findById(any());
-        doReturn(true).when(service).update(any());
 
         // When
         ResponseEntity<Movie> actual = underTest.updateMovie(movieDto, movieDto.getId(), movieDto.getVersion());

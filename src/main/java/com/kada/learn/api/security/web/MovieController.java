@@ -110,21 +110,18 @@ public class MovieController {
 
         ResponseEntity<Movie> responseEntity;
         // Perform update and return OK
-        if (service.update(existingMovie)) {
-            try {
-                responseEntity = ResponseEntity
-                        .ok()
-                        .eTag(Integer.toString(existingMovie.getVersion()))
-                        .location(new URI(MOVIE_URI + existingMovie.getId()))
-                        .body(existingMovie);
-            } catch (URISyntaxException e) {
-                logger.error("An error occurred during URI creation, cause {}", e.getMessage());
-                responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        } else {
+        service.update(existingMovie);
+
+        try {
+            responseEntity = ResponseEntity
+                    .ok()
+                    .eTag(Integer.toString(existingMovie.getVersion()))
+                    .location(new URI(MOVIE_URI + existingMovie.getId()))
+                    .body(existingMovie);
+        } catch (URISyntaxException e) {
+            logger.error("An error occurred during URI creation, cause {}", e.getMessage());
             responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
         return responseEntity;
     }
 

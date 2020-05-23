@@ -7,6 +7,6 @@ public interface MovieService {
     Movie findByName(String name);
     Iterable<Movie> findAll();
     Movie save(Movie movie);
-    boolean update(Movie movie);
+    void update(Movie movie);
     boolean delete(Integer id);
 }

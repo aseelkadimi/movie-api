@@ -36,9 +36,8 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public boolean update(Movie movie) {
-        Movie update = movieRepository.save(movie);
-        return update != null;
+    public void update(Movie movie) {
+        movieRepository.save(movie);
     }
 
     @Override

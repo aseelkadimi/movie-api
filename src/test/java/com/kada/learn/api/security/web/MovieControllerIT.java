@@ -135,7 +135,6 @@ class MovieControllerIT {
         Movie getMovie = new Movie(1, 1, "Matrix", "Us", "2020", "30k", "Good movie");
 
         doReturn(getMovie).when(service).findById(anyInt());
-        doReturn(true).when(service).update(any());
 
         // When
         MockHttpServletResponse response =  mockMvc.perform(put("/movie/{id}", 1)
@@ -169,30 +168,6 @@ class MovieControllerIT {
 
         // Then
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-    }
-
-    @Test
-    @DisplayName("PUT /movie/1 - Failure")
-    void testUpdateMovieFailure() throws Exception {
-        // Given
-        Movie putMovie = new Movie();
-        putMovie.setName("Matrix");
-        putMovie.setYearOfRelease("2002");
-
-        Movie getMovie = new Movie(1,1, "Matrix", "Us", "2020", "30k", "Good movie");
-
-        doReturn(getMovie).when(service).findById(getMovie.getId());
-        doReturn(false).when(service).update(any());
-
-        // When
-        MockHttpServletResponse response =  mockMvc.perform(put("/movie/{id}", 1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.IF_MATCH, 1)
-                .content(AssertionUtils.asJsonString(putMovie)))
-                .andReturn().getResponse();
-
-        // Then
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
     }
 
     @Test

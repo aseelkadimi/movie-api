@@ -2,14 +2,12 @@ package com.kada.learn.api.security.service;
 
 import com.kada.learn.api.security.model.Movie;
 import com.kada.learn.api.security.repository.MovieRepository;
-import com.kada.learn.api.security.web.MovieController;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
@@ -114,8 +112,7 @@ class MovieServiceTest {
 
         when(movieRepository.save(toSave)).thenReturn(toSave);
 
-        boolean actual = underTest.update(toSave);
-        Assertions.assertTrue(actual);
+        underTest.update(toSave);
     }
 
     @Test
