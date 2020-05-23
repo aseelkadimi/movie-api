@@ -1,9 +1,9 @@
 package com.akd.app.web;
 
 
+import com.akd.app.utils.AssertionUtils;
 import com.akd.app.model.Movie;
 import com.akd.app.service.MovieService;
-import com.akd.app.utils.AssertionUtils;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;

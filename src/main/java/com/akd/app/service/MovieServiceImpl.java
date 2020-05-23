@@ -1,7 +1,7 @@
 package com.akd.app.service;
 
-import com.akd.app.model.Movie;
 import com.akd.app.repository.MovieRepository;
+import com.akd.app.model.Movie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
