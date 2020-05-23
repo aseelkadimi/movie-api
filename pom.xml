@@ -21,6 +21,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<junit.jupiter.version>5.6.2</junit.jupiter.version>
 		<jacoco.version>0.8.5</jacoco.version>
+		<sonar.coverage.exclusions>com/akd/app/model/*</sonar.coverage.exclusions>
 	</properties>
 
 	<dependencies>
