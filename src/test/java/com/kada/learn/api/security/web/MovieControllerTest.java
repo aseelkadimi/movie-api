@@ -180,27 +180,12 @@ class MovieControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /movie/1 - Failure")
-    void testDeleteMovieFailure() throws Exception {
-        // Given
-        Movie movie = easyRandom.nextObject(Movie.class);
-
-        doReturn(movie).when(service).findById(any());
-        doReturn(false).when(service).delete(any());
-
-        ResponseEntity<Movie> actual = underTest.deleteMovie(movie.getId());
-
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actual.getStatusCode());
-    }
-
-    @Test
     @DisplayName("PUT /movie/1 - Success")
     void testDeleteMovieSuccess() throws Exception {
         // Given
         Movie movie = easyRandom.nextObject(Movie.class);
 
         doReturn(movie).when(service).findById(any());
-        doReturn(true).when(service).delete(any());
 
         ResponseEntity<Movie> actual = underTest.deleteMovie(movie.getId());
 

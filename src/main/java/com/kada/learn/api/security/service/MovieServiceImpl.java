@@ -41,8 +41,7 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public void delete(Integer id) {
         movieRepository.deleteById(id);
-        return true;
     }
 }

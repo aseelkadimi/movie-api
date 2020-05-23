@@ -8,5 +8,5 @@ public interface MovieService {
     Iterable<Movie> findAll();
     Movie save(Movie movie);
     void update(Movie movie);
-    boolean delete(Integer id);
+    void delete(Integer id);
 }

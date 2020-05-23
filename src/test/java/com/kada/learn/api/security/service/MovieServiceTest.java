@@ -118,9 +118,6 @@ class MovieServiceTest {
     @Test
     @DisplayName("Method delete - Success")
     public void testDeleteSuccess(){
-        Movie toSave = easyRandom.nextObject(Movie.class);
-
-        boolean actual = underTest.delete(1);
-        Assertions.assertTrue(actual);
+        underTest.delete(1);
     }
 }

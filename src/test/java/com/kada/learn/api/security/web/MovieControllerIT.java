@@ -177,7 +177,6 @@ class MovieControllerIT {
         Movie getMovie = new Movie(1, "Matrix", "Us", "2020", "30k", "Good movie");
 
         doReturn(getMovie).when(service).findById(1);
-        doReturn(true).when(service).delete(1);
 
         // When
         MockHttpServletResponse response =  mockMvc
@@ -207,26 +206,4 @@ class MovieControllerIT {
         // Then
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
-
-    @Test
-    @DisplayName("DELETE /movie/1 - Failure")
-    void testDeleteMovieFailure() throws Exception {
-        // Given
-        Movie getMovie = new Movie(1, "Matrix", "Us", "2020", "30k", "Good movie");
-
-        doReturn(getMovie).when(service).findById(1);
-        doReturn(false).when(service).delete(1);
-
-        // When
-        MockHttpServletResponse response =  mockMvc
-                .perform(delete("/movie/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andReturn()
-                .getResponse();
-
-        // Then
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
-    }
-
-
 }
