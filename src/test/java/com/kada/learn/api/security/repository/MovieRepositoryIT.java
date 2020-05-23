@@ -12,6 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
@@ -54,8 +55,9 @@ class MovieRepositoryIT {
     @Test
     public void testCreateMoviesAndGetAll() {
         // Given
-        List<Movie> randomMovies = getRandomMovies();
-
+        List<Movie> randomMovies = easyRandom
+                .objects(Movie.class,10)
+                .collect(Collectors.toList());
         // When
         List<Movie> savedMovies = saveMovies(randomMovies);
         List<Movie> foundMovies = new ArrayList<>();
@@ -89,14 +91,6 @@ class MovieRepositoryIT {
         Assertions.assertNotEquals(newName, oldName);
         Assertions.assertEquals(newName, found.getName());
         Assertions.assertEquals(updated, found);
-    }
-
-    private List<Movie> getRandomMovies(){
-        List<Movie> movies = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            movies.add(easyRandom.nextObject(Movie.class));
-        }
-        return movies;
     }
 
     private List<Movie> saveMovies(List<Movie> movies){
