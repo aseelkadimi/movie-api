@@ -4,6 +4,7 @@ import com.akd.app.Application;
 import com.akd.app.model.Movie;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
 class MovieRepositoryIT {
