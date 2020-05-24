@@ -2,14 +2,17 @@ package com.akd.app.web;
 
 
 import com.akd.app.model.Movie;
+import com.akd.app.security.jwt.JwtTokenProvider;
 import com.akd.app.service.MovieService;
 import com.akd.app.utils.AssertionUtils;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,35 +22,25 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(controllers = MovieController.class)
 class MovieControllerIT {
 
     @MockBean
     private MovieService service;
 
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
     @Autowired
     private MockMvc mockMvc;
 
     private final EasyRandom easyRandom = new EasyRandom();
-
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-
-    @BeforeAll
-    static void beforeAll() {
-        // Spring's dates are configured to GMT, so adjust our timezone accordingly
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-    }
 
     @Test
     @DisplayName("GET /movie/movieId - Found")
