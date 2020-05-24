@@ -1,7 +1,7 @@
 package com.akd.app.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.akd.app.model.Movie;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;

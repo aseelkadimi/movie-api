@@ -156,6 +156,8 @@ public class MovieController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
+        service.delete(id);
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

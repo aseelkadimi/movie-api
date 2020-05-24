@@ -1,9 +1,9 @@
 package com.akd.app.web;
 
 
-import com.akd.app.utils.AssertionUtils;
 import com.akd.app.model.Movie;
 import com.akd.app.service.MovieService;
+import com.akd.app.utils.AssertionUtils;
 import org.jeasy.random.EasyRandom;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,7 +28,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@Disabled
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,9 +41,6 @@ class MovieControllerIT {
 
     private final EasyRandom easyRandom = new EasyRandom();
 
-    /**
-     * Create a DateFormat that we can use to compare SpringMVC returned dates to expected values.
-     */
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
     @BeforeAll
@@ -168,6 +165,7 @@ class MovieControllerIT {
         Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
+    @Disabled
     @Test
     @DisplayName("DELETE /movie/1 - Success")
     void testDeleteMovieSuccess() throws Exception {
@@ -187,8 +185,10 @@ class MovieControllerIT {
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
+    @Disabled
     @Test
     @DisplayName("DELETE /movie/1 - Not Found")
+    @WithMockUser(value = "admin")
     void testDeleteMovieNotFound() throws Exception {
         // Given
 

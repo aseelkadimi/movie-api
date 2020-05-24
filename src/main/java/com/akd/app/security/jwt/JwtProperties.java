@@ -1,7 +1,6 @@
 package com.akd.app.security.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Objects;

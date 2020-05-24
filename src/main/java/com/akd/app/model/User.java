@@ -1,10 +1,5 @@
 package com.akd.app.model;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,10 +14,6 @@ import static java.util.stream.Collectors.toList;
 
 @Entity
 @Table(name="users")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,7 +26,6 @@ public class User implements UserDetails {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
     private List<String> roles = new ArrayList<>();
 
     @Override
@@ -43,14 +33,48 @@ public class User implements UserDetails {
         return this.roles.stream().map(SimpleGrantedAuthority::new).collect(toList());
     }
 
-    @Override
-    public String getPassword() {
-        return this.password;
+    public User(){
+
+    }
+
+    public User(@NotEmpty String username, @NotEmpty String password, List<String> roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
     public String getUsername() {
-        return this.username;
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     @Override
