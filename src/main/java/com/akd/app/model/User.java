@@ -13,7 +13,6 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 @Entity
-@Table(name="users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -5,6 +5,7 @@ import com.akd.app.repository.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -22,12 +23,17 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Value("${user.password}")
+    private String userPassword;
+    @Value("${admin.password}")
+    private String adminPassword;
+
     @Override
     public void run(String... args) throws Exception {
-        User user = new User("user", this.passwordEncoder.encode("password"), Collections.singletonList("ROLE_USER"));
+        User user = new User("user", this.passwordEncoder.encode(userPassword), Collections.singletonList("ROLE_USER"));
         this.users.save(user);
 
-        User admin = new User("admin", this.passwordEncoder.encode("password"), Arrays.asList("ROLE_USER", "ROLE_ADMIN"));
+        User admin = new User("admin", this.passwordEncoder.encode(adminPassword), Arrays.asList("ROLE_USER", "ROLE_ADMIN"));
         this.users.save(admin);
 
         logger.debug("printing all users...");
